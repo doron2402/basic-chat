@@ -104,21 +104,25 @@ function symbolizeCurseWords (msg) {
 
   msg.message = message;
   return msg;
-} 
+}
 
-         
+
 function animateMe (stream) {
 
     var streamWithQueries = stream.map(function (msg) {
-      var match = msg.message.match(/animate( me)? (.*)/i);
+      var queryType = 'image';
+      if (msg.message.indexOf('animate') > -1) {
+        queryType = 'animated';
+      }
+      var match = msg.message.match(/image( me)? (.*)/i) || msg.message.match(/animate( me)? (.*)/i);
       if(!match) { return msg; }
-      return [msg, { query: match[2], isQuery: true }];
+      return [msg, {queryType: queryType, query: match[2], isQuery: true }];
     }).flatten();
 
     var imageStream = streamWithQueries
       .where({ isQuery: true })
       .map(function (queryObj) {
-        return googleImages(queryObj.query);
+        return googleImages(queryObj);
       })
       .series()
       .map(function (results) {
@@ -126,11 +130,11 @@ function animateMe (stream) {
         return { src: result.src, isImage: true };
       })
       .errors(function (e, push) {
-        push(null, { src: 'images/404.gif', isImage: true }); 
+        push(null, { src: 'images/404.gif', isImage: true });
       });
 
 
-      
+
     var messageStream = streamWithQueries
       .fork()
       .where({ isMessage: true });
@@ -142,11 +146,11 @@ function googleImages (query) {
 
   var params = {
     v: '1.0',
-    q: query,
+    q: query.query,
     start: '1',
     safe: 'active',
-    imgtype: 'animated',
-    rsz: '8' 
+    imgtype: query.queryType || 'animated',
+    rsz: '8'
   };
 
   return hl($.ajax({

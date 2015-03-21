@@ -3,14 +3,14 @@
 For development,
 
 ```
-sudo npm install
+npm i && bower i
 gulp
 ```
 
 To run just it,
 
 ```
-sudo npm install --production
+npm i --production && bower i
 npm start
 ```
 
