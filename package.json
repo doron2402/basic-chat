@@ -4,7 +4,9 @@
   "description": "Basic Chat Implementation",
   "main": "lib/index.js",
   "scripts": {
-    "start": "node scripts/server.js"
+    "start": "node scripts/server.js",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -17,7 +19,7 @@
   },
   "homepage": "https://github.com/maxgurewitz/basic-chat",
   "devDependencies": {
-    "gulp": "*", 
+    "gulp": "*",
     "gulp-uglify": "*",
     "gulp-browserify": "*",
     "gulp-nodemon": "*",
@@ -41,6 +43,8 @@
     "body-parser": "*",
     "morgan": "*",
     "highland": "git://github.com/caolan/highland",
-    "socket.io": "*"
-  }
+    "socket.io": "*",
+    "snyk": "^1.192.3"
+  },
+  "snyk": true
 }
